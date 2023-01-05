@@ -1,4 +1,4 @@
-import {useState} from "react";
+import { useState } from "react";
 import { createStyles, Container, Title } from "@mantine/core";
 import JoinBadge from "./components/JoinBadge";
 import SelfMessage from "./components/SelfMessage";
@@ -13,7 +13,7 @@ const useStyles = createStyles((theme) => ({
   },
 
   wrapper: {
-    height: "86vh",
+    minHeight: "86vh",
     width: "80vw",
     display: "grid",
     gap: theme.spacing.md,
@@ -21,7 +21,14 @@ const useStyles = createStyles((theme) => ({
     marginTop: theme.spacing.xl,
     border: "4px solid #020202",
     borderRadius: "18px",
-    boxShadow:  "20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff"
+    boxShadow: "20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff",
+
+    [theme.fn.smallerThan("md")]: {
+      border: "none",
+      boxShadow: "none",
+      width: "100%",
+      height: "100vh",
+    },
   },
 
   title: {
@@ -75,15 +82,14 @@ const data = {
   },
 };
 
-
 function App() {
   const { classes } = useStyles();
   const [message, setMessage] = useState("");
 
   const sendMessage = () => {
     console.log(message);
-    setMessage("")
-  }
+    setMessage("");
+  };
 
   return (
     <div className={classes.app}>
@@ -102,7 +108,7 @@ function App() {
         <div className={classes.inputWrapper}>
           <input
             className={classes.messageInput}
-            placeholder="type something here..."
+            placeholder="Type a message..."
             type="text"
             name="message"
             id="message"
