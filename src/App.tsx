@@ -28,12 +28,17 @@ const useStyles = createStyles((theme) => ({
       boxShadow: "none",
       width: "100%",
       height: "100vh",
+      marginTop: theme.spacing.sm,
     },
   },
 
   title: {
     textAlign: "center",
     marginTop: theme.spacing.xl,
+
+    [theme.fn.smallerThan("md")]: {
+      marginTop: theme.spacing.sm,
+    },
   },
 
   messagesWrapper: {
