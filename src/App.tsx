@@ -1,19 +1,22 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import io from "socket.io-client";
 import { createStyles, Container, Title } from "@mantine/core";
 import JoinBadge from "./components/JoinBadge";
 import SelfMessage from "./components/SelfMessage";
 import StrangerMessage from "./components/StrangerMessage";
 
+const socket = io();
+
 const useStyles = createStyles((theme) => ({
   app: {
-    height: "100vh",
+    height: "100dvh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
   },
 
   wrapper: {
-    minHeight: "86vh",
+    height: "86vh",
     width: "80vw",
     display: "grid",
     gap: theme.spacing.md,
@@ -27,7 +30,7 @@ const useStyles = createStyles((theme) => ({
       border: "none",
       boxShadow: "none",
       width: "100%",
-      height: "100vh",
+      height: "100dvh",
       marginTop: theme.spacing.sm,
     },
   },
@@ -60,6 +63,7 @@ const useStyles = createStyles((theme) => ({
   },
 
   messageInput: {
+    background: "transparent",
     fontSize: 16,
     border: "none",
     width: "96%",
@@ -90,9 +94,24 @@ const data = {
 function App() {
   const { classes } = useStyles();
   const [message, setMessage] = useState("");
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    // const newSocket: any = io(`http://${window.location.hostname}:3000`);
+    const newSocket: any = io(`http://localhost:3000`, {
+      withCredentials: true,
+    });
+    // fetch("http://localhost:3000")
+    //   .then(data => data.json())
+    //   .then(data => console.log(data))
+
+    // setSocket(newSocket);
+    // return () => newSocket.close();
+  }, [setSocket]);
 
   const sendMessage = () => {
     console.log(message);
+    socket.emit("message", message);
     setMessage("");
   };
 
@@ -112,6 +131,7 @@ function App() {
         </div>
         <div className={classes.inputWrapper}>
           <input
+            autoFocus
             className={classes.messageInput}
             placeholder="Type a message..."
             type="text"

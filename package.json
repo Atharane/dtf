@@ -9,10 +9,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mantine/core": "^5.10.0",
+    "express": "^4.18.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "socket.io": "^4.5.4",
-    "@mantine/core": "^5.10.0"
+    "socket.io-client": "^4.5.4",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",
