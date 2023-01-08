@@ -97,7 +97,7 @@ function App() {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    // const newSocket: any = io(`http://${window.location.hostname}:3000`);
+    // const newSocket: any = io();
     const newSocket: any = io(`http://localhost:3000`, {
       withCredentials: true,
     });
