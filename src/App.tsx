@@ -95,7 +95,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [message, setMessage] = useState("");
-  const [messageArray, setMessageArray] = useState([]);
+  const [messageArray, setMessageArray] = useState<string[]>([]); 
 
   useEffect(() => {
     socket.on("messageResponse", (data) =>
