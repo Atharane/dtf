@@ -12,8 +12,8 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export default function SimpleBatch() {
+export default function SimpleBatch({ userName }: { userName: string}) {
   const { classes } = useStyles();
 
-  return <Badge className={classes.badge}>👋 Jacob just joined the chat</Badge>;
+  return <Badge className={classes.badge}>👋 {userName} just joined the chat</Badge>;
 }

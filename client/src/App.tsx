@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { createStyles, Container, Title } from "@mantine/core";
 import socketIO from "socket.io-client";
 const socket = socketIO("http://localhost:4000");
-import Home from "./Home";
+import Login from "./Login";
+import UserAvatats from "./components/UserAvatars"
 import JoinBadge from "./components/JoinBadge";
 import SelfMessage from "./components/SelfMessage";
 import StrangerMessage from "./components/StrangerMessage";
@@ -75,10 +76,9 @@ const useStyles = createStyles((theme) => ({
   sendButton: {
     height: 20,
     marginRight: 6,
+    marginLeft: 12,
     "&:hover": {
       cursor: "pointer",
-      // height: 28,
-      // transition: "all 0.2s ease-in-out",
     },
   },
 }));
@@ -103,7 +103,10 @@ function App() {
     );
   }, [socket, messageArray]);
 
-  console.log(messageArray)
+  const handleLogin = userName => {
+    setIsLoggedIn(true);
+    socket.emit('newUser', { userName, socketID: socket.id });
+  }
 
   const sendMessage = () => {
     // console.log(message);
@@ -139,13 +142,9 @@ function App() {
           <JoinBadge />
           <SelfMessage body={data.body} author={data.author} />
           <SelfMessage body={data.body} author={data.author} /> */}
-          {messageArray.map((message) => {
+          {messageArray.map((message:any) => {
             if (message.name === localStorage.getItem("userName")) {
-              return (
-                <SelfMessage
-                  body={message.text}
-                />
-              );
+              return <SelfMessage body={message.text} />;
             } else {
               return (
                 <StrangerMessage
@@ -156,7 +155,7 @@ function App() {
             }
           })}
         </div>
-        {/* <p>Someone is typing...</p> */}
+        <p>Someone is typing...</p>
         <div className={classes.inputWrapper}>
           <input
             autoFocus
@@ -170,23 +169,15 @@ function App() {
           />
           <img
             className={classes.sendButton}
-            placeholder=""
             src="img/send.png"
             alt="send"
             onClick={sendMessage}
-          />
-          <img
-            className={classes.sendButton}
-            placeholder=""
-            src="img/favicon.png"
-            alt="send"
-            onClick={leaveChat}
           />
         </div>
       </Container>
     </div>
   ) : (
-    <Home setIsLoggedIn={setIsLoggedIn} />
+      <Login handleLogin={handleLogin} />
   );
 }
 
