@@ -1,4 +1,4 @@
-import { createStyles, Text, Avatar, Group } from "@mantine/core";
+import { createStyles, Text} from "@mantine/core";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -14,12 +14,9 @@ const useStyles = createStyles((theme) => ({
 
 interface CommentSimpleProps {
   body: string;
-  author: {
-    name: string;
-  };
 }
 
-export default function CommentSimple({ body, author }: CommentSimpleProps) {
+export default function CommentSimple({ body }: CommentSimpleProps) {
   const { classes } = useStyles();
 
   return (

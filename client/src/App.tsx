@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { createStyles, Container, Title } from "@mantine/core";
+import socketIO from "socket.io-client";
+const socket = socketIO("http://localhost:4000");
+import Home from "./Home";
 import JoinBadge from "./components/JoinBadge";
 import SelfMessage from "./components/SelfMessage";
 import StrangerMessage from "./components/StrangerMessage";
-
 
 const useStyles = createStyles((theme) => ({
   app: {
@@ -90,31 +92,71 @@ const data = {
 
 function App() {
   const { classes } = useStyles();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const [message, setMessage] = useState("");
-  const [socket, setSocket] = useState(null);
+  const [messageArray, setMessageArray] = useState([]);
 
   useEffect(() => {
-  }, [setSocket]);
+    socket.on("messageResponse", (data) =>
+      setMessageArray([...messageArray, data])
+    );
+  }, [socket, messageArray]);
+
+  console.log(messageArray)
 
   const sendMessage = () => {
-    console.log(message);
+    // console.log(message);
+    console.log({ userName: localStorage.getItem("userName"), message });
+
+    if (message.trim() && localStorage.getItem("userName")) {
+      socket.emit("message", {
+        text: message,
+        name: localStorage.getItem("userName"),
+        id: `${socket.id}${Math.random()}`,
+        socketID: socket.id,
+      });
+    }
+
     setMessage("");
   };
 
-  return (
+  const leaveChat = () => {
+    localStorage.removeItem("userName");
+    setIsLoggedIn(false);
+  };
+
+  return isLoggedIn ? (
     <div className={classes.app}>
       <Container className={classes.wrapper}>
         <Title className={classes.title}>dtf?</Title>
         <div className={classes.messagesWrapper}>
-          <StrangerMessage body={data.body} author={data.author} />
+          {/* <StrangerMessage body={data.body} author={data.author} />
           <JoinBadge />
           <SelfMessage body={data.body} author={data.author} />
           <JoinBadge />
           <StrangerMessage body={data.body} author={data.author} />
           <JoinBadge />
           <SelfMessage body={data.body} author={data.author} />
-          <SelfMessage body={data.body} author={data.author} />
+          <SelfMessage body={data.body} author={data.author} /> */}
+          {messageArray.map((message) => {
+            if (message.name === localStorage.getItem("userName")) {
+              return (
+                <SelfMessage
+                  body={message.text}
+                />
+              );
+            } else {
+              return (
+                <StrangerMessage
+                  body={message.text}
+                  author={{ name: message.name }}
+                />
+              );
+            }
+          })}
         </div>
+        {/* <p>Someone is typing...</p> */}
         <div className={classes.inputWrapper}>
           <input
             autoFocus
@@ -133,9 +175,18 @@ function App() {
             alt="send"
             onClick={sendMessage}
           />
+          <img
+            className={classes.sendButton}
+            placeholder=""
+            src="img/favicon.png"
+            alt="send"
+            onClick={leaveChat}
+          />
         </div>
       </Container>
     </div>
+  ) : (
+    <Home setIsLoggedIn={setIsLoggedIn} />
   );
 }
 
