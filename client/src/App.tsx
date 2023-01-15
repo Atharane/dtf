@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
 import { createStyles, Container, Title } from "@mantine/core";
 import JoinBadge from "./components/JoinBadge";
 import SelfMessage from "./components/SelfMessage";
 import StrangerMessage from "./components/StrangerMessage";
 
-const socket = io();
 
 const useStyles = createStyles((theme) => ({
   app: {
@@ -37,7 +35,7 @@ const useStyles = createStyles((theme) => ({
 
   title: {
     textAlign: "center",
-    marginTop: theme.spacing.xl,
+    marginTop: theme.spacing.md,
 
     [theme.fn.smallerThan("md")]: {
       marginTop: theme.spacing.sm,
@@ -48,7 +46,6 @@ const useStyles = createStyles((theme) => ({
     gridRow: "2 / -1",
     overflowY: "auto",
     borderRadius: "10px",
-    marginTop: theme.spacing.md,
   },
 
   inputWrapper: {
@@ -74,8 +71,8 @@ const useStyles = createStyles((theme) => ({
   },
 
   sendButton: {
-    height: 24,
-
+    height: 20,
+    marginRight: 6,
     "&:hover": {
       cursor: "pointer",
       // height: 28,
@@ -97,21 +94,10 @@ function App() {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    // const newSocket: any = io();
-    const newSocket: any = io(`http://localhost:3000`, {
-      withCredentials: true,
-    });
-    // fetch("http://localhost:3000")
-    //   .then(data => data.json())
-    //   .then(data => console.log(data))
-
-    // setSocket(newSocket);
-    // return () => newSocket.close();
   }, [setSocket]);
 
   const sendMessage = () => {
     console.log(message);
-    socket.emit("message", message);
     setMessage("");
   };
 
