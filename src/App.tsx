@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { createStyles, Container, Title } from "@mantine/core";
+import { createStyles, Button, Container, Title, Text } from "@mantine/core";
 import socketIO from "socket.io-client";
-const socket = socketIO("http://localhost:4000");
+const socket = socketIO("https://dtf-server-production.up.railway.app");
 import Login from "./Login";
-import UserAvatats from "./components/UserAvatars"
+import UserAvatars from "./components/UserAvatars";
 import JoinBadge from "./components/JoinBadge";
 import SelfMessage from "./components/SelfMessage";
 import StrangerMessage from "./components/StrangerMessage";
@@ -36,10 +36,22 @@ const useStyles = createStyles((theme) => ({
     },
   },
 
-  title: {
-    textAlign: "center",
+  titleWrapper: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 1fr",
     marginTop: theme.spacing.md,
 
+    [theme.fn.smallerThan("md")]: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+  },
+
+  title: {
+    textAlign: "center",
+    // align item to the center of flexbox
+    alignSelf: "center",
     [theme.fn.smallerThan("md")]: {
       marginTop: theme.spacing.sm,
     },
@@ -81,21 +93,24 @@ const useStyles = createStyles((theme) => ({
       cursor: "pointer",
     },
   },
-}));
 
-const data = {
-  body: "This Pokémon likes to lick its palms that are sweetened by being soaked in honey. The water spouts are very accurate.",
-  author: {
-    name: "Jacob Warnhalter",
+  leaveButton: {
+    backgroundColor: "#f76f72",
+    // put to far right
+    justifySelf: "end",
+
+    "&:hover": {
+      backgroundColor: "#f24245",
+    },
   },
-};
+}));
 
 function App() {
   const { classes } = useStyles();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [message, setMessage] = useState("");
-  const [messageArray, setMessageArray] = useState<string[]>([]); 
+  const [messageArray, setMessageArray] = useState<string[]>([]);
 
   useEffect(() => {
     socket.on("messageResponse", (data) =>
@@ -103,13 +118,12 @@ function App() {
     );
   }, [socket, messageArray]);
 
-  const handleLogin = userName => {
+  const handleLogin = (userName) => {
     setIsLoggedIn(true);
-    socket.emit('newUser', { userName, socketID: socket.id });
-  }
+    socket.emit("newUser", { userName, socketID: socket.id });
+  };
 
   const sendMessage = () => {
-    // console.log(message);
     console.log({ userName: localStorage.getItem("userName"), message });
 
     if (message.trim() && localStorage.getItem("userName")) {
@@ -132,17 +146,16 @@ function App() {
   return isLoggedIn ? (
     <div className={classes.app}>
       <Container className={classes.wrapper}>
-        <Title className={classes.title}>dtf?</Title>
+        <div className={classes.titleWrapper}>
+          <UserAvatars />
+          <Title className={classes.title}>dtf?</Title>
+          <Button className={classes.leaveButton} onClick={leaveChat}>
+            Exit Chat
+          </Button>
+        </div>
         <div className={classes.messagesWrapper}>
-          {/* <StrangerMessage body={data.body} author={data.author} />
-          <JoinBadge />
-          <SelfMessage body={data.body} author={data.author} />
-          <JoinBadge />
-          <StrangerMessage body={data.body} author={data.author} />
-          <JoinBadge />
-          <SelfMessage body={data.body} author={data.author} />
-          <SelfMessage body={data.body} author={data.author} /> */}
-          {messageArray.map((message:any) => {
+          {/* <JoinBadge /> */}
+          {messageArray.map((message: any) => {
             if (message.name === localStorage.getItem("userName")) {
               return <SelfMessage body={message.text} />;
             } else {
@@ -155,7 +168,9 @@ function App() {
             }
           })}
         </div>
-        <p>Someone is typing...</p>
+        <Text size="xs" style={{ textAlign: "center" }}>
+          someone is typing...
+        </Text>
         <div className={classes.inputWrapper}>
           <input
             autoFocus
@@ -177,7 +192,7 @@ function App() {
       </Container>
     </div>
   ) : (
-      <Login handleLogin={handleLogin} />
+    <Login handleLogin={handleLogin} />
   );
 }
 

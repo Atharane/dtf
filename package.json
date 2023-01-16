@@ -10,12 +10,11 @@
   },
   "dependencies": {
     "@mantine/core": "^5.10.0",
+    "avvvatars-react": "^0.4.2",
     "express": "^4.18.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "socket.io": "^4.5.4",
-    "socket.io-client": "^4.5.4",
-    "uuidv4": "^6.2.13"
+    "socket.io-client": "^4.5.4"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",
