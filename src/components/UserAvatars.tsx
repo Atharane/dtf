@@ -12,15 +12,12 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export default function MyAvatar() {
+export default function MyAvatar({users}) {
   const { classes } = useStyles();
 
   return (
     <div className={classes.wrapper}>
-      <Avvvatars value="tim@apple.com" />
-      <Avvvatars value="jim@apple.com" />
-      <Avvvatars value="gim@apple.com" />
-      <Avvvatars value="sim@apple.com" />
+      {users.map(user => <Avvvatars value={user.userName} />)}
     </div>
   );
 }

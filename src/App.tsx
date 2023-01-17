@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { createStyles, Button, Container, Title, Text } from "@mantine/core";
 import socketIO from "socket.io-client";
-const socket = socketIO("https://dtf-server-production.up.railway.app");
+const socket = socketIO("http://localhost:4000/");
 import Login from "./Login";
 import UserAvatars from "./components/UserAvatars";
 import JoinBadge from "./components/JoinBadge";
@@ -108,15 +108,25 @@ const useStyles = createStyles((theme) => ({
 function App() {
   const { classes } = useStyles();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   const [message, setMessage] = useState("");
   const [messageArray, setMessageArray] = useState<string[]>([]);
+  const [users, setUsers] = useState<string[]>([]);
 
   useEffect(() => {
     socket.on("messageResponse", (data) =>
       setMessageArray([...messageArray, data])
     );
   }, [socket, messageArray]);
+
+  useEffect(() => {
+    console.log("new user joined!");
+
+    socket.on("newUserResponse", (data) => {
+      console.log(data);
+      setUsers(data)
+    });
+
+  }, [socket, users]);
 
   const handleLogin = (userName) => {
     setIsLoggedIn(true);
@@ -140,6 +150,7 @@ function App() {
 
   const leaveChat = () => {
     localStorage.removeItem("userName");
+    window.location.reload();
     setIsLoggedIn(false);
   };
 
@@ -147,7 +158,7 @@ function App() {
     <div className={classes.app}>
       <Container className={classes.wrapper}>
         <div className={classes.titleWrapper}>
-          <UserAvatars />
+          <UserAvatars users={users}/>
           <Title className={classes.title}>dtf?</Title>
           <Button className={classes.leaveButton} onClick={leaveChat}>
             Exit Chat
