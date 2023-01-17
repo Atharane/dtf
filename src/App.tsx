@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { createStyles, Button, Container, Title, Text } from "@mantine/core";
 import socketIO from "socket.io-client";
-const socket = socketIO("http://localhost:4000/");
+// const socket = socketIO("http://localhost:4000/");
+const socket = socketIO("https://dtf-server-production.up.railway.app");
 import Login from "./Login";
 import UserAvatars from "./components/UserAvatars";
 import JoinBadge from "./components/JoinBadge";
@@ -17,7 +18,7 @@ const useStyles = createStyles((theme) => ({
   },
 
   wrapper: {
-    height: "86vh",
+    height: "90vh",
     width: "80vw",
     display: "grid",
     gap: theme.spacing.md,
@@ -119,13 +120,10 @@ function App() {
   }, [socket, messageArray]);
 
   useEffect(() => {
-    console.log("new user joined!");
-
     socket.on("newUserResponse", (data) => {
       console.log(data);
-      setUsers(data)
+      setUsers(data);
     });
-
   }, [socket, users]);
 
   const handleLogin = (userName) => {
@@ -133,8 +131,8 @@ function App() {
     socket.emit("newUser", { userName, socketID: socket.id });
   };
 
-  const sendMessage = () => {
-    console.log({ userName: localStorage.getItem("userName"), message });
+  const sendMessage = (e) => {
+    e.preventDefault();
 
     if (message.trim() && localStorage.getItem("userName")) {
       socket.emit("message", {
@@ -158,16 +156,17 @@ function App() {
     <div className={classes.app}>
       <Container className={classes.wrapper}>
         <div className={classes.titleWrapper}>
-          <UserAvatars users={users}/>
+          <UserAvatars users={users} />
           <Title className={classes.title}>dtf?</Title>
           <Button className={classes.leaveButton} onClick={leaveChat}>
             Exit Chat
           </Button>
         </div>
         <div className={classes.messagesWrapper}>
-          {/* <JoinBadge /> */}
           {messageArray.map((message: any) => {
-            if (message.name === localStorage.getItem("userName")) {
+            if (message.type === "join") {
+              return <JoinBadge userName={message.userName} />;
+            } else if (message.name === localStorage.getItem("userName")) {
               return <SelfMessage body={message.text} />;
             } else {
               return (
@@ -182,24 +181,29 @@ function App() {
         <Text size="xs" style={{ textAlign: "center" }}>
           someone is typing...
         </Text>
-        <div className={classes.inputWrapper}>
-          <input
-            autoFocus
-            className={classes.messageInput}
-            placeholder="Type a message..."
-            type="text"
-            name="message"
-            id="message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <img
-            className={classes.sendButton}
-            src="img/send.png"
-            alt="send"
-            onClick={sendMessage}
-          />
-        </div>
+        <form onSubmit={sendMessage}>
+          <div className={classes.inputWrapper}>
+            <input
+              autoFocus
+              className={classes.messageInput}
+              placeholder="Type a message..."
+              type="text"
+              name="message"
+              id="message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              style={{ fontFamily: "inherit" }}
+            />
+            <button style={{ border: "none", background: "transparent" }}>
+              <img
+                className={classes.sendButton}
+                src="img/send.png"
+                alt="send"
+                onClick={sendMessage}
+              />
+            </button>
+          </div>
+        </form>
       </Container>
     </div>
   ) : (

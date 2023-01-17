@@ -2,8 +2,8 @@ import { createStyles, Text, Avatar, Group } from "@mantine/core";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
-    width: "60%",
-    marginTop: theme.spacing.xl,
+    width: "80%",
+    marginTop: theme.spacing.sm,
     padding: theme.spacing.sm,
     borderRadius: theme.spacing.sm,
     backgroundColor: "#f4f5fa",
@@ -11,7 +11,6 @@ const useStyles = createStyles((theme) => ({
 
   author: {
     fontWeight: 700,
-    marginBottom: theme.spacing.xs,
   },
 }));
 
@@ -22,7 +21,7 @@ interface CommentSimpleProps {
   };
 }
 
-export default function CommentSimple({ body, author }: CommentSimpleProps) {
+export default function CommentSimple({ body, author}: CommentSimpleProps) {
   const { classes } = useStyles();
   return (
     <div className={classes.wrapper}>

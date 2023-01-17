@@ -5,7 +5,7 @@ const useStyles = createStyles((theme) => ({
     display: "block",
     width: "fit-content",
     margin: "0 auto",
-    marginTop: theme.spacing.xl,
+    marginTop: theme.spacing.md,
     textTransform: "none",
     backgroundColor: "#fff",
     boxShadow:  "8px 8px 16px #d0d3e4, -8px -8px 16px #fafdff"

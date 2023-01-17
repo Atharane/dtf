@@ -2,9 +2,9 @@ import { createStyles, Text} from "@mantine/core";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
-    width: "60%",
+    width: "80%",
     marginLeft: "auto",
-    marginTop: theme.spacing.xl,
+    marginTop: theme.spacing.sm,
     padding: theme.spacing.sm,
     borderRadius: theme.spacing.sm,
     backgroundColor: "#465ffd",
