@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { createStyles, Button, Container, Title, Text } from "@mantine/core";
 import socketIO from "socket.io-client";
 // const socket = socketIO("http://localhost:4000/");
-const socket = socketIO("https://dtf-server-production.up.railway.app");
+const socket = socketIO("https://dtf-server.onrender.com");
 import Login from "./Login";
 import UserAvatars from "./components/UserAvatars";
 import JoinBadge from "./components/JoinBadge";
