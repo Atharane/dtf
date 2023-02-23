@@ -11,6 +11,8 @@ import JoinBadge from "./components/JoinBadge";
 import SelfMessage from "./components/SelfMessage";
 import StrangerMessage from "./components/StrangerMessage";
 
+import "./App.css";
+
 const useStyles = createStyles((theme) => ({
   app: {
     height: "100dvh",
