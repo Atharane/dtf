@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createStyles, Button, Container, Title, Text } from "@mantine/core";
 import socketIO from "socket.io-client";
+// if environment is development, use localhost
+// const url = process.env.NODE_ENV === "development" ? "http://localhost:4000/" : "https://dtf-server.onrender.com";
 // const socket = socketIO("http://localhost:4000/");
 const socket = socketIO("https://dtf-server.onrender.com");
 import Login from "./Login";
@@ -112,6 +114,7 @@ function App() {
   const [message, setMessage] = useState("");
   const [messageArray, setMessageArray] = useState<string[]>([]);
   const [users, setUsers] = useState<string[]>([]);
+  const lastMessageRef = useRef<any>(null);
 
   useEffect(() => {
     socket.on("messageResponse", (data) =>
@@ -125,6 +128,11 @@ function App() {
       setUsers(data);
     });
   }, [socket, users]);
+
+  useEffect(() => {
+    // 👇️ scroll to bottom every time messages change
+    lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messageArray]);
 
   const handleLogin = (userName) => {
     setIsLoggedIn(true);
@@ -177,6 +185,7 @@ function App() {
               );
             }
           })}
+          <div ref={lastMessageRef} />
         </div>
         <Text size="xs" style={{ textAlign: "center" }}>
           someone is typing...
